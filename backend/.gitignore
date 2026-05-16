@@ -1,0 +1,6 @@
+node_modules/
+.env
+.env.local
+backend.log
+backend.err.log
+npm-debug.log*

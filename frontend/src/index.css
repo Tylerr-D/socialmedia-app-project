@@ -1,0 +1,113 @@
+body{
+  background: linear-gradient(135deg, #f8f1d7, #eadfb4);
+  font-family: Arial, sans-serif;
+}
+
+/* RESET */
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* NAVBAR */
+.top-nav{
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  padding: 15px;
+  position: fixed;
+  top: 0;
+  background: rgba(255,255,255,0.6);
+  backdrop-filter: blur(10px);
+}
+
+.nav-link{
+  text-decoration: none;
+  color: black;
+  padding: 10px 18px;
+  border-radius: 10px;
+  background: white;
+  font-weight: bold;
+  transition: 0.2s;
+}
+
+.nav-link:hover{
+  transform: translateY(-2px);
+}
+
+.nav-link.active{
+  background: black;
+  color: white;
+}
+
+/* CREATE POST */
+.create-post-section{
+  padding-top: 100px;
+  display: flex;
+  justify-content: center;
+}
+
+.create-post-card{
+  background: white;
+  padding: 30px;
+  border-radius: 15px;
+  width: 350px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+.create-post-card h1{
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.create-post-card p{
+  text-align: center;
+  margin-bottom: 20px;
+  color: gray;
+}
+
+.create-post-card form{
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.create-post-card input{
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+.create-post-card button{
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  background: black;
+  color: white;
+  cursor: pointer;
+}
+
+/* FEED */
+.feed-section{
+  padding-top: 100px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.post-card{
+  width: 350px;
+  background: white;
+  padding: 15px;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}
+
+.post-card img{
+  width: 100%;
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
