@@ -8,7 +8,7 @@ const Feed = () => {
   const [posts, setPosts] = useState([])
 
   useEffect(() => {
-    axios.get(`${getApiUrl()}/posts`)
+    axios.get(`${import.meta.env.VITE_API_URL}/posts`)
       .then((res) => {
         setPosts(res.data.posts || [])
       })
