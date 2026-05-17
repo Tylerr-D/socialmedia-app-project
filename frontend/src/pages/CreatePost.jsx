@@ -10,7 +10,7 @@ const CreatePost = () => {
 
     const formData = new FormData(e.target)
 
-   axios.post(`${getApiUrl()}/posts`, formData)
+axios.post(`${import.meta.env.VITE_API_URL}/posts`, formData)
       .then(() => {
         alert("Post created ")
         navigate('/feed')
