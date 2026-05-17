@@ -1,32 +1,28 @@
-import React from 'react'
 import axios from 'axios'
-import { useNavigate, Link } from 'react-router-dom'
-import { getApiUrl } from '../config/api'
+import { Link, useNavigate } from 'react-router-dom'
+import API_URL from '../config/api'
 
 const CreatePost = () => {
   const navigate = useNavigate()
 
-  const handleSubmit = async (e) => {
+  async function handleSubmit(e) {
     e.preventDefault()
 
-    const formData = new FormData(e.target)
-
-    axios.post(`${getApiUrl()}/posts`, formData)
-      .then(() => {
-        alert("Post created ")
-        navigate('/feed')
-      })
-      .catch((err) => {
-        console.log(err)
-        alert("Error creating post")
-      })
+    try {
+      await axios.post(`${API_URL}/posts`, new FormData(e.target))
+      alert('Post created!')
+      navigate('/feed')
+    } catch (err) {
+      console.log("Error creating post:", err)
+      alert('Failed to create post')
+    }
   }
 
   return (
     <>
       <nav className='top-nav'>
-        <Link to="/feed" className='nav-link'>Feed</Link>
-        <Link to="/create-post" className='nav-link active'>Create</Link>
+        <Link to='/feed' className='nav-link'>Feed</Link>
+        <Link to='/create-post' className='nav-link active'>Create</Link>
       </nav>
 
       <section className='create-post-section'>

@@ -1,18 +1,17 @@
-import React from 'react'
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import CreatePost from './pages/CreatePost'
 import Feed from './pages/feed'
 
 const App = () => {
   return (
-    <Router>
+    <BrowserRouter>
       <Routes>
         <Route path='/' element={<Feed />} />
         <Route path='/feed' element={<Feed />} />
         <Route path='/create-post' element={<CreatePost />} />
       </Routes>
-    </Router>
+    </BrowserRouter>
   )
 }
 
-export default App 
+export default App

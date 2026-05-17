@@ -1,146 +1,100 @@
-const express = require(`express`)
+const cors = require("cors")
+const express = require("express")
+const fileUpload = require("express-fileupload")
 const mongoose = require("mongoose")
 const postModel = require("./models/post.model")
 const uploadFile = require("./services/storage.service")
-const fileUpload = require("express-fileupload")
-const cors = require("cors")
 
 const app = express()
+
+// Middleware
 app.use(cors())
 app.use(fileUpload())
 app.use(express.json())
 
+// Health check
 app.get("/", (req, res) => {
-  res.status(200).json({
-    message: "backend is running"
-  })
+  res.json({ message: "Backend is running" })
 })
 
-app.post("/posts",async(req,res)=>{
+// Create a new post
+app.post("/posts", async (req, res) => {
+  if (!req.files || !req.files.image) {
+    return res.status(400).json({ message: "Image is required" })
+  }
+
+  if (!req.body.caption) {
+    return res.status(400).json({ message: "Caption is required" })
+  }
+
   try {
-    if (!req.files || !req.files.image) {
-      return res.status(400).json({
-        message: "image is required"
-      })
-    }
+    const uploaded = await uploadFile(req.files.image)
 
-    if (!req.body.caption) {
-      return res.status(400).json({
-        message: "caption is required"
-      })
-    }
-
-    const file = req.files.image
-    const caption = req.body.caption
-    const result = await uploadFile(file)
-    
     const post = await postModel.create({
-        image:result.url,
-        caption:caption
+      image: uploaded.url,
+      caption: req.body.caption
     })
 
-    res.status(201).json({
-        message:"post ban gaya",
-        post
-         
-    })
-  } catch (error) {
-    res.status(500).json({
-      message: "post create nahi hua",
-      error: error.message
-    })
+    res.status(201).json({ message: "Post created", post })
+  } catch (err) {
+    res.status(500).json({ message: "Could not create post", error: err.message })
   }
 })
 
-app.get("/posts",async(req,res)=>{
+// Get all posts (newest first)
+app.get("/posts", async (req, res) => {
   try {
-   const posts =   await postModel.find().sort({ _id: -1 })
-
-   res.status(200).json({
-    message:"post mil gaya mere dost",
-    posts:posts
-   })
-  } catch (error) {
-    res.status(500).json({
-      message: "posts nahi mile",
-      error: error.message
-    })
+    const posts = await postModel.find().sort({ _id: -1 })
+    res.json({ message: "Posts fetched", posts })
+  } catch (err) {
+    res.status(500).json({ message: "Could not fetch posts", error: err.message })
   }
 })
 
-app.delete("/posts/:id",async(req,res)=>{
-try {
+// Delete a post
+app.delete("/posts/:id", async (req, res) => {
+  if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+    return res.status(400).json({ message: "Invalid post id" })
+  }
 
-const id = req.params.id
+  try {
+    const post = await postModel.findByIdAndDelete(req.params.id)
 
-if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(400).json({
-        message:"invalid post id"
-    })
-}
+    if (!post) {
+      return res.status(404).json({ message: "Post not found" })
+    }
 
-const post = await postModel.findOneAndDelete({
-    _id : id
+    res.json({ message: "Post deleted" })
+  } catch (err) {
+    res.status(500).json({ message: "Could not delete post", error: err.message })
+  }
 })
 
-if (!post) {
-    return res.status(404).json({
-        message:"post nahi mila"
-    })
-}
+// Update a post's caption
+app.patch("/posts/:id", async (req, res) => {
+  if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+    return res.status(400).json({ message: "Invalid post id" })
+  }
 
-res.status(200).json({
-    message:"post delete hogya dost"
+  if (!req.body.caption) {
+    return res.status(400).json({ message: "Caption is required" })
+  }
+
+  try {
+    const post = await postModel.findByIdAndUpdate(
+      req.params.id,
+      { caption: req.body.caption },
+      { new: true }
+    )
+
+    if (!post) {
+      return res.status(404).json({ message: "Post not found" })
+    }
+
+    res.json({ message: "Post updated", post })
+  } catch (err) {
+    res.status(500).json({ message: "Could not update post", error: err.message })
+  }
 })
-} catch (error) {
-    res.status(500).json({
-        message:"post delete nahi hua",
-        error:error.message
-    })
-}
 
-
-})
-
-app.patch("/posts/:id",async(req,res)=>{
-try {
-
-const id = req.params.id
-
-if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(400).json({
-        message:"invalid post id"
-    })
-}
-
-if (!req.body.caption) {
-    return res.status(400).json({
-        message:"caption is required"
-    })
-}
-
-const post = await postModel.findOneAndUpdate(
-  { _id: id },
-  { caption: req.body.caption },
-  { new: true }
-)
-
-if (!post) {
-    return res.status(404).json({
-        message:"post nahi mila"
-    })
-}
-
-res.status(200).json({
-    message:"post update hogya dost",
-    post
-})
-} catch (error) {
-    res.status(500).json({
-        message:"post update nahi hua",
-        error:error.message
-    })
-}
-
-})
 module.exports = app

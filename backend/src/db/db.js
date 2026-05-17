@@ -1,17 +1,12 @@
-const mongoose = require(`mongoose`)
+const mongoose = require("mongoose")
 
-async function connectDB(){
-    const mongoUri = process.env.MONGODB_URI
+async function connectDB() {
+  if (!process.env.MONGODB_URI) {
+    throw new Error("MONGODB_URI is missing in .env")
+  }
 
-    if (!mongoUri) {
-        throw new Error("MONGODB_URI is missing in .env")
-    }
-
-    await mongoose.connect(mongoUri, {
-        serverSelectionTimeoutMS: 10000
-    })
-
-    console.log("connected to db")
+  await mongoose.connect(process.env.MONGODB_URI)
+  console.log("Connected to database")
 }
 
 module.exports = connectDB

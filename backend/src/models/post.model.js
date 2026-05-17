@@ -1,10 +1,11 @@
-const mongoose = require(`mongoose`)
-
-const noteSchema = new mongoose.Schema({
-    image:String,
-    caption:String
+const mongoose = require("mongoose")
+ 
+// Each post has an image URL and a caption
+const postSchema = new mongoose.Schema({
+  image: String,
+  caption: String
 })
-
-const postModel = mongoose.model("post",noteSchema)
-
-module.exports = postModel
+ 
+const Post = mongoose.model("Post", postSchema)
+ 
+module.exports = Post
