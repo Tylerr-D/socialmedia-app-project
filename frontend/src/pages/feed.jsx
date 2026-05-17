@@ -7,7 +7,7 @@ const Feed = () => {
   const [posts, setPosts] = useState([])
 
   useEffect(() => {
-    axios.get("http://localhost:3000/posts")
+    axios.get(`${getApiUrl()}/posts`)
       .then((res) => {
         setPosts(res.data.posts || [])
       })
