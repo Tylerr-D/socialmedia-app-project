@@ -10,7 +10,7 @@ const CreatePost = () => {
 
     const formData = new FormData(e.target)
 
-    axios.post("http://localhost:3000/posts", formData)
+   axios.post(`${getApiUrl()}/posts`, formData)
       .then(() => {
         alert("Post created ")
         navigate('/feed')
